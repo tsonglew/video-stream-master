@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "name": "Video Stream Master",
+    "description": "",
+    "version": "1.0",
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "tabs",
+        "storage"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.youtube.com/*"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ],
+    "options_page": "options.html"
+}
