@@ -4,7 +4,7 @@
     "description": "",
     "version": "1.0",
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "index.html"
     },
     "permissions": [
         "tabs",
@@ -16,9 +16,13 @@
                 "*://*.youtube.com/*"
             ],
             "js": [
-                "content.js"
+                "static/js/content.js"
             ]
         }
     ],
-    "options_page": "options.html"
+    "options_page": "options.html",
+    "content_security_policy": {
+        "script-src": "self",
+        "object-src": "self"
+    }
 }
