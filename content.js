@@ -1,13 +1,7 @@
 function addLocationObserver (callback) {
-
-    // Options for the observer (which mutations to observe)
-    const config = { attributes: false, childList: true, subtree: true };
-
-    // Create an observer instance linked to the callback function
+    const config = { attributes: true, childList: true, subtree: true };
     const observer = new MutationObserver(callback);
-
-    // Start observing the target node for configured mutations
-    observer.observe(document.body, config);
+    observer.observe(document.getElementsByClassName("video-stream html5-main-video"), config);
 }
 
 function observerCallback () {
@@ -17,23 +11,24 @@ function observerCallback () {
 }
 
 function initContentScript () {
-    console.log("This is a content script!");
-    let currentChannel = document.getElementById("channel-name").querySelector("#text > yt-attributed-string > span > a").text;
-    chrome.storage.sync.get({
-        doublePlaySpeedChannels: '',
-    }, function (items) {
-        items.doublePlaySpeedChannels.split(",").forEach(function (channel) {
-            try {
+    let currentChannel = "";
+    try {
+        currentChannel = document.getElementById("channel-name").querySelector("#text > yt-attributed-string > span > a").text;
+        chrome.storage.sync.get({
+            doublePlaySpeedChannels: '',
+        }, function (items) {
+            items.doublePlaySpeedChannels.split(",").forEach(function (channel) {
+                let playspeed = 1;
                 if (currentChannel === channel) {
-                    document.getElementsByClassName("video-stream html5-main-video")[0].playbackRate = 2;
-                } else {
-                    document.getElementsByClassName("video-stream html5-main-video")[0].playbackRate = 1;
+                    playspeed = 2;
                 }
-            } catch (exceptionVar) {
-            } finally {
-            }
+                document.getElementsByClassName("video-stream html5-main-video")[0].playbackRate = playspeed;
+                console.log("set playback speed to " + playspeed);
+            });
         });
-    });
+    } catch (exceptionVar) {
+        return;
+    }
 }
 
 addLocationObserver(observerCallback);
