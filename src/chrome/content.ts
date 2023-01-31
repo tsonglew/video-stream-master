@@ -1,43 +1,55 @@
+let videoList: HTMLVideoElement[] = [];
 
-// import { ChromeMessage, Sender } from "../types";
-
-function addLocationObserver( callback: any ) {
+function addLocationObserver() {
     const config = { attributes: true, childList: true, subtree: true };
-    const observer = new MutationObserver( callback );
-    observer.observe( document.body, config );
+
+    new MutationObserver( () => {
+        const currentVideoList = document.getElementsByTagName( "video" ) as HTMLCollection;
+        for ( let i = 0; i < currentVideoList.length; i++ ) {
+            const video = currentVideoList[i] as HTMLVideoElement;
+            if ( videoList.includes( video, 0 ) ) {
+                continue;
+            }
+
+            videoList.push( video );
+            new MutationObserver( () => updateVideosPlaySpeed( video ) ).observe( video, config );
+        }
+    } ).observe( document.body, config )
 }
 
-function observerCallback() {
-    if ( window.location.href.startsWith( "https://www.youtube.com" ) ) {
-        initContentScript();
-    }
-}
-
-function initContentScript() {
-    let currentChannel = "";
+function updateVideosPlaySpeed( video: HTMLVideoElement ) {
     try {
-        ( document.getElementsByClassName( "video-stream html5-main-video" )[0] as HTMLVideoElement ).playbackRate = 2;
-        // currentChannel = ( document?.getElementById( "channel-name" )?.querySelector( "#text > yt-attributed-string > span > a" ) as HTMLAnchorElement )?.text;
-        // chrome.storage.sync.get( {
-        //     doublePlaySpeedChannels: '',
-        // }, function ( items ) {
-        //     items.doublePlaySpeedChannels.split( "," ).forEach( function ( channel: any ) {
-        //         let playspeed = 1;
-        //         if ( currentChannel === channel ) {
-        //             playspeed = 2;
-        //         }
-        //         ( document.getElementsByClassName( "video-stream html5-main-video" )[0] as HTMLVideoElement ).playbackRate = playspeed;
-        //         console.log( "set playback speed to " + playspeed );
-        //     } );
-        // } );
+        console.log( "video changed: " + video );
+        chrome.storage.sync.get( {
+            speed: 1,
+        }, function ( items ) {
+            if ( video.playbackRate === items.speed ) {
+                return;
+            }
+            video.playbackRate = items.speed;
+        } );
     } catch ( exceptionVar ) {
         return;
     }
 }
 
-addLocationObserver( observerCallback );
-observerCallback();
+function updateAllVideosPlaySpeed() {
+    try {
+        chrome.storage.sync.get( {
+            speed: 1,
+        }, function ( items ) {
+            const currentVideoList = document.getElementsByTagName( "video" ) as HTMLCollection;
+            for ( let i = 0; i < currentVideoList.length; i++ ) {
+                const video = currentVideoList[i] as HTMLVideoElement;
+                video.playbackRate = items.speed
+            }
+        } );
+    } catch ( exceptionVar ) {
+        return;
+    }
+}
 
-console.log( 'run' )
-
+chrome.storage.onChanged.addListener( updateAllVideosPlaySpeed );
+updateAllVideosPlaySpeed();
+addLocationObserver();
 export { }
