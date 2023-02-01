@@ -24,5 +24,24 @@
     "content_security_policy": {
         "script-src": "self",
         "object-src": "self"
+    },
+    "commands": {
+        "speedup": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+W",
+                "mac": "MacCtrl+Shift+W"
+            },
+            "description": "increase playspeed rate"
+        },
+        "speeddown": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+S",
+                "mac": "MacCtrl+Shift+S"
+            },
+            "description": "decrease playspeed rate"
+        }
+    },
+    "background": {
+        "service_worker": "static/js/background.js"
     }
 }

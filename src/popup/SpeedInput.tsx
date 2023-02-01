@@ -1,5 +1,11 @@
-import { on } from 'events';
+import { Button } from '@mui/material';
 import { useState } from 'react';
+import InputSlider from './InputSlider';
+import Stack from '@mui/material/Stack';
+import StackItem from './StackItem';
+import '../index.css';
+
+
 
 function SpeedInputArea( { speed, setSpeed }: { speed: number, setSpeed: Function } ) {
     return (
@@ -12,7 +18,7 @@ function SpeedInputArea( { speed, setSpeed }: { speed: number, setSpeed: Functio
 
 function SaveBtn( { onClick }: { onClick: () => void } ) {
     return (
-        <button id="save" onClick={onClick}>Save</button>
+        <Button variant="contained" onClick={onClick}>Save</Button>
     )
 }
 
@@ -41,21 +47,18 @@ function SpeedInput() {
         chrome.storage.sync.set( {
             speed: speed,
         }, function () {
-            console.log( 'Options saved.' + speed )
-            setStatus( 'Options saved.' );
-            setTimeout( function () {
-                setStatus( '' );
-            }, 750 );
         } );
     }
 
     return (
-        <div>
-            <label> speed: </label>
-            <SpeedInputArea speed={speed} setSpeed={setSpeed} />
-            <Status text={status} />
-            <SaveBtn onClick={onSave} />
-        </div >
+        <Stack spacing={2} >
+            <StackItem>
+                <InputSlider value={speed} setValue={setSpeed} />
+            </StackItem>
+            <StackItem>
+                <SaveBtn onClick={onSave} />
+            </StackItem>
+        </Stack>
     );
 }
 
