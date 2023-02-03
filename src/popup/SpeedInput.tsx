@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import InputSlider from './InputSlider';
 import Stack from '@mui/material/Stack';
 import StackItem from './StackItem';
@@ -32,29 +32,31 @@ function Status( { text }: { text: string } ) {
 function SpeedInput() {
 
     const [speed, setSpeed] = useState( -1 );
-    const update = useUpdate();
 
-    chrome.storage.sync.onChanged.addListener( () => {
-        console.log( "storage changed" )
-        update();
-
-    } );
-
-    if ( speed < 0 ) {
+    const syncSpeedFormStorage = useCallback(() => {
         chrome.storage.sync.get( {
             speed: 1,
         }, items => {
             console.log( "speed input set speed: " + items.speed )
             setSpeed( items.speed );
         } );
-    }
+    }, [])
 
-    function onSave() {
+
+    useEffect(() => {
+        syncSpeedFormStorage();
+        chrome.storage.sync.onChanged.addListener( () => {
+            syncSpeedFormStorage();
+        } );
+    }, [syncSpeedFormStorage])
+
+
+    const onSave = useCallback(() => {
         console.log( 'save ' + speed )
         chrome.storage.sync.set( {
             speed: Math.min( Math.max( 0, speed ), 10 ),
         }, () => { } );
-    }
+    }, [speed]);
 
     return (
         <Stack spacing={2} >

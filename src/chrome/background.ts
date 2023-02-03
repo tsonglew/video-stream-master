@@ -5,8 +5,9 @@ chrome.commands.onCommand.addListener( function ( command ) {
         chrome.storage.sync.get( {
             speed: 0,
         }, function ( items ) {
+            const newSpeed = items.speed + 1;
             chrome.storage.sync.set( {
-                speed: items.speed + 1,
+                speed: newSpeed  > 10 ? 10 : newSpeed,
             }, function () {
             } );
         } );
@@ -14,8 +15,9 @@ chrome.commands.onCommand.addListener( function ( command ) {
         chrome.storage.sync.get( {
             speed: 1,
         }, function ( items ) {
+            const newSpeed = items.speed - 1;
             chrome.storage.sync.set( {
-                speed: items.speed - 1,
+                speed: newSpeed  < 0 ? 0 : newSpeed,
             }, function () {
             } );
         } );
