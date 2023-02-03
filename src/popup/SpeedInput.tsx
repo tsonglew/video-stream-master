@@ -4,6 +4,7 @@ import InputSlider from './InputSlider';
 import Stack from '@mui/material/Stack';
 import StackItem from './StackItem';
 import '../index.css';
+import { useUpdate } from 'ahooks';
 
 
 
@@ -31,12 +32,18 @@ function Status( { text }: { text: string } ) {
 function SpeedInput() {
 
     const [speed, setSpeed] = useState( -1 );
-    const [status, setStatus] = useState( '' );
+    const update = useUpdate();
+
+    chrome.storage.sync.onChanged.addListener( () => {
+        console.log( "storage changed" )
+        update();
+
+    } );
 
     if ( speed < 0 ) {
         chrome.storage.sync.get( {
             speed: 1,
-        }, function ( items ) {
+        }, items => {
             console.log( "speed input set speed: " + items.speed )
             setSpeed( items.speed );
         } );
@@ -45,9 +52,8 @@ function SpeedInput() {
     function onSave() {
         console.log( 'save ' + speed )
         chrome.storage.sync.set( {
-            speed: speed,
-        }, function () {
-        } );
+            speed: Math.min( Math.max( 0, speed ), 10 ),
+        }, () => { } );
     }
 
     return (
