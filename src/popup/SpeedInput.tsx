@@ -1,12 +1,10 @@
 import { Button } from '@mui/material';
 import { useState, useCallback, useEffect } from 'react';
 import InputSlider from './InputSlider';
+import { MIN, MAX, STEP } from '../consts';
 import Stack from '@mui/material/Stack';
 import StackItem from './StackItem';
 import '../index.css';
-import { useUpdate } from 'ahooks';
-
-
 
 function SpeedInputArea( { speed, setSpeed }: { speed: number, setSpeed: Function } ) {
     return (
@@ -54,7 +52,7 @@ function SpeedInput() {
     const onSave = useCallback(() => {
         console.log( 'save ' + speed )
         chrome.storage.sync.set( {
-            speed: Math.min( Math.max( 0, speed ), 10 ),
+            speed: Math.min( Math.max( MIN, speed ), MAX ),
         }, () => { } );
     }, [speed]);
 

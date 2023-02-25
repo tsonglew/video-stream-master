@@ -1,3 +1,4 @@
+import { MIN, MAX, STEP } from '../consts';
 
 chrome.commands.onCommand.addListener( function ( command ) {
 
@@ -5,9 +6,9 @@ chrome.commands.onCommand.addListener( function ( command ) {
         chrome.storage.sync.get( {
             speed: 0,
         }, function ( items ) {
-            const newSpeed = items.speed + 1;
+            const newSpeed = items.speed + STEP;
             chrome.storage.sync.set( {
-                speed: newSpeed  > 10 ? 10 : newSpeed,
+                speed: newSpeed  > MAX ? MAX : newSpeed,
             }, function () {
             } );
         } );
@@ -15,9 +16,9 @@ chrome.commands.onCommand.addListener( function ( command ) {
         chrome.storage.sync.get( {
             speed: 1,
         }, function ( items ) {
-            const newSpeed = items.speed - 1;
+            const newSpeed = items.speed - STEP;
             chrome.storage.sync.set( {
-                speed: newSpeed  < 0 ? 0 : newSpeed,
+                speed: newSpeed  < MIN ? MIN : newSpeed,
             }, function () {
             } );
         } );

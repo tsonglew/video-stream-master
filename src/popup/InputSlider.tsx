@@ -5,9 +5,10 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import MuiInput from '@mui/material/Input';
+import { MIN, MAX, STEP } from '../consts';
 
 const Input = styled( MuiInput )`
-  width: 42px;
+  width: 50px;
 `;
 
 export default function InputSlider( { value, setValue }: { value: number, setValue: Function } ) {
@@ -21,7 +22,7 @@ export default function InputSlider( { value, setValue }: { value: number, setVa
     };
 
     const handleBlur = () => {
-        setValue( Math.min( Math.max( 0, value ), 10 ) )
+        setValue( Math.min( Math.max( MIN, value ), MAX ) )
     };
 
     return (
@@ -35,9 +36,9 @@ export default function InputSlider( { value, setValue }: { value: number, setVa
                         value={typeof value === 'number' ? value : 0}
                         onChange={handleSliderChange}
                         aria-labelledby="input-slider"
-                        min={0}
-                        step={1}
-                        max={10}
+                        min={MIN}
+                        step={STEP}
+                        max={MAX}
                     />
                 </Grid>
                 <Grid item>
@@ -47,9 +48,9 @@ export default function InputSlider( { value, setValue }: { value: number, setVa
                         onChange={handleInputChange}
                         onBlur={handleBlur}
                         inputProps={{
-                            step: 1,
-                            min: 0,
-                            max: 10,
+                            step: STEP,
+                            min: MIN,
+                            max: MAX,
                             type: 'number',
                             'aria-labelledby': 'input-slider',
                         }}
