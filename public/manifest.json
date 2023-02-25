@@ -1,8 +1,14 @@
 {
     "manifest_version": 3,
     "name": "Video Stream Master",
-    "description": "",
+    "description": "For controlling video playback speed and other features",
     "version": "1.0",
+    "icons": {
+        "16": "logo.ico",
+        "32": "logo.ico",
+        "48": "logo.ico",
+        "128": "logo.ico"
+    },
     "action": {
         "default_popup": "popup.html"
     },
